@@ -67,7 +67,7 @@ Monopoly.updatePlayersMoney = function (player, amount) {
         Monopoly.playerIsBroke = true;
         console.log(Monopoly.playerIsBroke)
     }
-    if (Monopoly.playerIsBroke==="true"){
+    if (Monopoly.playerIsBroke===true){
         Monopoly.playerBroke();
     }
     player.attr("data-money", playersMoney);
@@ -315,8 +315,11 @@ Monopoly.playerBroke= function(){
     var popup = Monopoly.getPopup("broke"); // if the player is broke get the "broke" pop up
     Monopoly.playSound("gunshot");
     Monopoly.showPopup("broke");//shows the pop up and then closes it
-    $('.property.player'+playerId).removeClass('property')
-        .attr("data-owner", '');
+    setTimeout(function () {
+        $(".popup-lightbox").fadeOut();
+    }, 2000);
+    $('.property.player'+playerId).addClass('available').removeClass('.player'+playerId)
+        .removeAttr("data-owner");
     Monopoly.setNextPlayerTurn();
 };
 //allows the player to buy the property if he has enough money
@@ -342,10 +345,12 @@ Monopoly.handleAction = function (player, action, amount) {
     switch (action) {
         case "move":
             Monopoly.movePlayer(player, amount);
+            Monopoly.closePopup();
             break;
         case "pay": // if the player is not broke he pays
             if (Monopoly.playerIsBroke=== false) {
                 Monopoly.updatePlayersMoney(player, amount);
+                Monopoly.closePopup();
             }
             else {
                 Monopoly.playerBroke();
@@ -354,10 +359,11 @@ Monopoly.handleAction = function (player, action, amount) {
             break;
         case "jail":
             Monopoly.sendToJail(player);
+            Monopoly.closePopup();
             break;
     }
 
-    Monopoly.closePopup();
+
 };
 
 //creates players according to the user's choice at the beginning of the game
@@ -398,25 +404,8 @@ Monopoly.handlePassedGo = function () {
 // a valid player input is between 1 and 6 players this function checks that the user chose a valid input of players
 Monopoly.isValidInput = function (validate, value) {
     var isValid = false;
-    switch (value) {
-        case "1":
-            isValid = true;
-            break;
-        case "2":
-            isValid = true;
-            break;
-        case "3":
-            isValid = true;
-            break;
-        case "4":
-            isValid = true;
-            break;
-        case "5":
-            isValid = true;
-            break;
-        case "6":
-            isValid = true;
-            break;
+    if (1<value<=6){
+        isValid=true;
     }
 
     if (!isValid) {
@@ -444,7 +433,9 @@ Monopoly.adjustBoardSize = function () {
 
 //closes an open pop up
 Monopoly.closePopup = function () {
-    $(".popup-lightbox").fadeOut();
+    if (Monopoly.playerIsBroke === false) {
+        $(".popup-lightbox").fadeOut();
+    }
 };
 //plays a sound
 Monopoly.playSound = function (sound) {
