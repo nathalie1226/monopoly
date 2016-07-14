@@ -51,19 +51,7 @@ Monopoly.updatePlayersMoney = function (player, amount) {
 
     var playersMoney = parseInt(player.attr("data-money"));
     playersMoney -= amount;
-    if (playersMoney < 50) { // checks if the player is broke
-        // var popup = Monopoly.getPopup("broke"); // if the player is broke get the "broke" pop up
-        // // popup.find(".cell-price").text(propertyCost);
-        // // popup.find("button").unbind("click").bind("click", function () {
-        // //     var clickedBtn = $(this);
-        // //     if (clickedBtn.is("#yes")) {
-        // //         Monopoly.handleBuy(player, propertyCell, propertyCost);
-        // //     } else {
-        // //         Monopoly.closeAndNextTurn();
-        // //     }
-        // // });
-        // Monopoly.playSound("woopwoop");
-        // Monopoly.showPopup("broke"); //shows the pop up and then closes it
+    if (playersMoney < 0) { // checks if the player is broke
         Monopoly.playerIsBroke = true;
         console.log(Monopoly.playerIsBroke)
     }
@@ -321,14 +309,15 @@ Monopoly.playerBroke = function () {
     setTimeout(function () {
         $(".popup-lightbox").fadeOut();
     }, 2000);
-    console.log($('.cell.player' + playerId).length + " " + playerId + " -- " + ".cell.player" + playerId)
-    $('.cell.player' + playerId).addClass('available').removeClass('player' + playerId)
+    console.log($('.property.player' + playerId).length + " " + playerId + " -- " + ".cell.player" + playerId)
+    $('.property.player' + playerId).addClass('available').removeClass('player' + playerId)
         .removeAttr("data-owner");
     $('#player' + playerId).addClass('broke');
     Monopoly.setNextPlayerTurn();
 };
 //allows the player to buy the property if he has enough money
 Monopoly.handleBuy = function (player, propertyCell, propertyCost) {
+    console.log('in');
     var playersMoney = Monopoly.getPlayersMoney(player);
     if (playersMoney < propertyCost) {
         Monopoly.showErrorMsg();
@@ -336,7 +325,6 @@ Monopoly.handleBuy = function (player, propertyCell, propertyCost) {
     } else {
         Monopoly.updatePlayersMoney(player, propertyCost);
         var rent = Monopoly.calculateProperyRent(propertyCost);
-
         propertyCell.removeClass("available")
             .addClass(player.attr("id"))
             .attr("data-owner", player.attr("id"))
