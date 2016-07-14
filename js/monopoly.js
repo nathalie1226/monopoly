@@ -106,8 +106,8 @@ Monopoly.handleTurn = function () {
         var playerId = parseInt(player.attr("id").replace("player", ""));
         $(".player#player" + playerId).addClass("own-property");
         setTimeout(function () {
-            $(".player#player" + playerId).removeClass("own-property"),2000
-        });
+            $(".player#player" + playerId).removeClass("own-property");
+        }, 2000);
     } else if (playerCell.is(".go-to-jail")) {
         Monopoly.handleGoToJail(player);
     } else if (playerCell.is(".chance")) {
@@ -125,6 +125,12 @@ Monopoly.setNextPlayerTurn = function () {
     var nextPlayerId = playerId + 1;
     if (nextPlayerId > $(".player").length) {
         nextPlayerId = 1;
+    }
+    if (Monopoly.doubleCounter===1){
+        nextPlayerId =playerId;
+        console.log('in');
+        console.log(nextPlayerId)
+        Monopoly.doubleCounter=0;
     }
     currentPlayerTurn.removeClass("current-turn");
     var nextPlayer = $(".player#player" + nextPlayerId);
