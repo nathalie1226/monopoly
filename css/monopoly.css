@@ -203,6 +203,12 @@ body{
 .player#player4 , .player4.cell .content{
     background-color: #d061cd;
 }
+.player#player5 , .player4.cell .content{
+    background-color: red;
+}
+.player#player6 , .player4.cell .content{
+    background-color: yellow;
+}
 
 .player.current-turn{
     background-image:url(../images/crown.png);
